@@ -3,6 +3,7 @@ import { pool } from './db.js';
 import { hashPassword, comparePassword } from './components/hash.js';
 import session from 'express-session';
 
+
 const app = express();
 app.use(express.json());
 
@@ -38,6 +39,19 @@ app.get('/get-items', async (req, res) => {
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
+});
+
+app.post('/lists/:listId/items', async (req, res) => {
+  const { listId } = req.params;
+  const { description, status } = req.body;
+
+  await pool.query(
+    `INSERT INTO items (list_id, description, status)
+     VALUES ($1, $2, $3)`,
+    [listId, description, status]
+  );
+
+  res.status(200).json({ success: true });
 });
 
 // Add new list
