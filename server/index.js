@@ -26,7 +26,7 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://vite-react-one-olive.vercel.app",
     credentials: true,
   })
 );
@@ -305,5 +305,5 @@ app.post("/logout", (req, res) => {
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`✅ Server running on http://localhost:${PORT}`);
+  console.log(`✅ Server running on https://vite-react-one-olive.vercel.app:${PORT}`);
 });

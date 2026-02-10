@@ -12,7 +12,7 @@ function Header() {
 
   const checkSession = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/get-session", {
+      const res = await axios.get("https://to-do-list-ws11.onrender.com/get-session", {
         withCredentials: true,
       });
 
@@ -32,7 +32,7 @@ function Header() {
   const handleLogout = async () => {
     try {
       await axios.post(
-        "http://localhost:3000/logout",
+        "https://to-do-list-ws11.onrender.com/logout",
         {},
         { withCredentials: true }
       );

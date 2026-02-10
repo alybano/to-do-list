@@ -42,7 +42,7 @@ function ListItem() {
 
   const fetchListTitle = async () => {
     try {
-      const res = await axios.get(`http://localhost:3000/get-list/${id}`, {
+      const res = await axios.get(`https://to-do-list-ws11.onrender.com/get-list/${id}`, {
         withCredentials: true,
       });
       if (res.data.success) setListTitle(res.data.list.title);
@@ -53,7 +53,7 @@ function ListItem() {
 
   const fetchItems = async () => {
     try {
-      const res = await axios.get(`http://localhost:3000/get-items/${id}`, {
+      const res = await axios.get(`https://to-do-list-ws11.onrender.com/get-items/${id}`, {
         withCredentials: true,
       });
       if (res.data.success) {
@@ -73,7 +73,7 @@ function ListItem() {
     if (!newItem.trim()) return;
     try {
       const res = await axios.post(
-        `http://localhost:3000/lists/${id}/items`,
+        `https://to-do-list-ws11.onrender.com/lists/${id}/items`,
         { description: newItem },
         { withCredentials: true }
       );
@@ -89,7 +89,7 @@ function ListItem() {
   const deleteItem = async (itemId) => {
     try {
       const res = await axios.delete(
-        `http://localhost:3000/lists/${id}/items/${itemId}`,
+        `https://to-do-list-ws11.onrender.com/lists/${id}/items/${itemId}`,
         { withCredentials: true }
       );
       if (res.data.success) fetchItems();
@@ -102,7 +102,7 @@ function ListItem() {
     try {
       const newStatus = item.status ? "pending" : "completed";
       const res = await axios.put(
-        `http://localhost:3000/lists/${id}/items/${item.id}`,
+        `https://to-do-list-ws11.onrender.com/lists/${id}/items/${item.id}`,
         { description: item.description, status: newStatus },
         { withCredentials: true }
       );
@@ -116,7 +116,7 @@ function ListItem() {
     if (!editedItemText.trim()) return;
     try {
       const res = await axios.put(
-        `http://localhost:3000/lists/${id}/items/${item.id}`,
+        `https://to-do-list-ws11.onrender.com/lists/${id}/items/${item.id}`,
         {
           description: editedItemText,
           status: item.status ? "completed" : "pending",

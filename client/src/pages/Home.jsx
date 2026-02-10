@@ -25,7 +25,7 @@ function Home() {
 
   const checkSession = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/get-session", {
+      const res = await axios.get("https://to-do-list-ws11.onrender.com/get-session", {
         withCredentials: true,
       });
       if (!res.data.session) navigate("/");
@@ -36,7 +36,7 @@ function Home() {
 
   const fetchLists = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/get-list", {
+      const res = await axios.get("https://to-do-list-ws11.onrender.com/get-list", {
         withCredentials: true,
       });
       if (res.data.success) setLists(res.data.list);
@@ -50,7 +50,7 @@ function Home() {
     if (!newTitle.trim()) return;
     try {
       const res = await axios.post(
-        "http://localhost:3000/add-list",
+        "https://to-do-list-ws11.onrender.com/add-list",
         { listTitle: newTitle },
         { withCredentials: true }
       );
@@ -66,7 +66,7 @@ function Home() {
   const deleteList = async (id) => {
     try {
       const res = await axios.delete(
-        `http://localhost:3000/delete-list/${id}`,
+        `https://to-do-list-ws11.onrender.com/delete-list/${id}`,
         { withCredentials: true }
       );
       if (res.data.success) fetchLists();
@@ -90,7 +90,7 @@ function Home() {
     if (!editedTitle.trim()) return;
     try {
       const res = await axios.put(
-        `http://localhost:3000/update-list/${id}`,
+        `https://to-do-list-ws11.onrender.com/update-list/${id}`,
         { title: editedTitle },
         { withCredentials: true }
       );

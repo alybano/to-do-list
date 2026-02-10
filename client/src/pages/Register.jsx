@@ -14,7 +14,7 @@ function Register() {
   // LOGIN HANDLER
   const handleLogin = async () => {
     try {
-      const res = await axios.post("http://localhost:3000/login", {
+      const res = await axios.post("https://to-do-list-ws11.onrender.com/login", {
         username,
         password,
       });
@@ -38,7 +38,7 @@ function Register() {
     }
 
     try {
-      const res = await axios.post("http://localhost:3000/register", {
+      const res = await axios.post("https://to-do-list-ws11.onrender.com/register", {
         name,
         username,
         password,
