@@ -1,26 +1,30 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import App from './App.jsx'
-import Home from './pages/Home.jsx'
-import ListItem from './pages/ListItem.jsx'
-import Register from './pages/Register.jsx'
-import Header from './components/Header.jsx'
-import './css/globals.css'
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import {
-  BrowserRouter, Routes, Route, 
-} from "react-router-dom";
+import App from "./App.jsx";
+import Home from "./pages/Home.jsx";
+import ListItem from "./pages/ListItem.jsx";
+import Register from "./pages/Register.jsx";
 
-createRoot(document.getElementById('root')).render(
+import "./css/globals.css";
+
+createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<App />} /> 
-        <Route path="/home" element={<Home />} /> 
-        <Route path="/register" element={<Register />} /> 
-        <Route path="/list-item" element={<ListItem />} /> 
-        <Route path="/header" element={<Header />} /> 
+        {/* Login */}
+        <Route path="/" element={<App />} />
+
+        {/* Register */}
+        <Route path="/register" element={<Register />} />
+
+        {/* Home (Lists) */}
+        <Route path="/home" element={<Home />} />
+
+        {/* Items inside a specific list */}
+        <Route path="/list-item/:id" element={<ListItem />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>
-)
+);
