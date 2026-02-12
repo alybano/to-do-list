@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { axiosInstance } from "../components/api";
 
 function Register() {
   const [isLogin, setIsLogin] = useState(true); // toggle between login/register
@@ -14,7 +15,7 @@ function Register() {
   // LOGIN HANDLER
   const handleLogin = async () => {
     try {
-      const res = await axios.post("https://to-do-list-ws11.onrender.com/login", {
+      const res = await axiosInstance.post("/login", {
         username,
         password,
       });
@@ -38,7 +39,7 @@ function Register() {
     }
 
     try {
-      const res = await axios.post("https://to-do-list-ws11.onrender.com/register", {
+      const res = await axiosInstance.post("/register", {
         name,
         username,
         password,

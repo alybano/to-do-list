@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { axiosInstance } from "./api.js";
+import { axiosInstance } from "./components/api";
 
 function App() {
   const [username, setUsername] = useState("");

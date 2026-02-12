@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-import { axiosInstance } from "./api.js";
+import { axiosInstance } from "../components/api";
 
 const colors = [
   "bg-blue-600",
