@@ -18,6 +18,7 @@ function Register() {
       const res = await axiosInstance.post("/login", {
         username,
         password,
+        withCredentials: true,
       });
 
       if (res.status === 200 && res.data.success) {
@@ -44,6 +45,7 @@ function Register() {
         username,
         password,
         confirm,
+        withCredentials: true,
       });
 
       if (res.status === 200 && res.data.success) {

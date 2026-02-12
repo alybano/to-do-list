@@ -10,7 +10,7 @@ function App() {
 
 const handleLogin = async () => {
   try {
-    const res = await axiosInstance.post("/login", { username, password });
+    const res = await axiosInstance.post("/login", { username, password, withCredentials: true, });
 
     if (res.status === 200 && res.data.success) {
       navigate("/home");
