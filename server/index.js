@@ -7,7 +7,7 @@ import { pool } from "./db.js";
 import { hashPassword, comparePassword } from "./components/hash.js";
 
 const app = express();
-const PORT = Number(process.env.BACKEND_PORT) || 3000;
+const PORT = process.env.PORT || 3000;
 
 // Security Middleware
 app.use(
@@ -26,7 +26,7 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: "https://vite-react-one-olive.vercel.app",
+    origin: "https://to-do-list-one-black-96.vercel.app",
     credentials: true,
   })
 );
