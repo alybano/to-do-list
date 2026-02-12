@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { axiosInstance } from "./api.js";
 
 const colors = [
   "bg-blue-600",
@@ -25,7 +25,7 @@ function Home() {
 
   const checkSession = async () => {
     try {
-      const res = await axios.get("https://to-do-list-ws11.onrender.com/get-session", {
+      const res = await axiosInstance.get("/get-session", {
         withCredentials: true,
       });
       if (!res.data.session) navigate("/");
@@ -36,7 +36,7 @@ function Home() {
 
   const fetchLists = async () => {
     try {
-      const res = await axios.get("https://to-do-list-ws11.onrender.com/get-list", {
+      const res = await axiosInstance.get("/get-list", {
         withCredentials: true,
       });
       if (res.data.success) setLists(res.data.list);
@@ -49,8 +49,8 @@ function Home() {
   const addList = async () => {
     if (!newTitle.trim()) return;
     try {
-      const res = await axios.post(
-        "https://to-do-list-ws11.onrender.com/add-list",
+      const res = await axiosInstance.post(
+        "/add-list",
         { listTitle: newTitle },
         { withCredentials: true }
       );
@@ -65,8 +65,8 @@ function Home() {
 
   const deleteList = async (id) => {
     try {
-      const res = await axios.delete(
-        `https://to-do-list-ws11.onrender.com/delete-list/${id}`,
+      const res = await axiosInstance.delete(
+        `/delete-list/${id}`,
         { withCredentials: true }
       );
       if (res.data.success) fetchLists();
@@ -89,8 +89,8 @@ function Home() {
   const updateListTitle = async (id) => {
     if (!editedTitle.trim()) return;
     try {
-      const res = await axios.put(
-        `https://to-do-list-ws11.onrender.com/update-list/${id}`,
+      const res = await axiosInstance.put(
+        `/update-list/${id}`,
         { title: editedTitle },
         { withCredentials: true }
       );

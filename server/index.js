@@ -38,7 +38,7 @@ app.use(
       "eeb1776a97822c4a1abbb47a677f6b415100a2f0ef3effb2d4c4523dec57d468",
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false },
+    cookie: { secure: process.env.NODE_ENV === "production" }
   })
 );
 
@@ -305,5 +305,5 @@ app.post("/logout", (req, res) => {
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`✅ Server running on https://vite-react-one-olive.vercel.app:${PORT}`);
+  console.log(`✅ Server running on port ${PORT}`);
 });

@@ -3,14 +3,15 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+// ✅ Use DATABASE_URL from .env for NeonDB
 export const pool = new Pool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  port: process.env.DB_PORT,
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 
+// ✅ Connect and log status
 pool.connect((err, client, release) => {
   if (err) {
     console.error('❌ Database connection error:', err.stack);
@@ -20,6 +21,3 @@ pool.connect((err, client, release) => {
   }
 });
 
-pool.on('error', (err) => {
-  console.error('❌ Unexpected database error:', err);
-});

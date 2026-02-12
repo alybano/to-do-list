@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import { axiosInstance } from "./api.js";
 
 const colors = [
   "bg-blue-600",
@@ -42,7 +43,7 @@ function ListItem() {
 
   const fetchListTitle = async () => {
     try {
-      const res = await axios.get(`https://to-do-list-ws11.onrender.com/get-list/${id}`, {
+      const res = await axiosInstance.get(`/get-list/${id}`, {
         withCredentials: true,
       });
       if (res.data.success) setListTitle(res.data.list.title);
@@ -53,7 +54,7 @@ function ListItem() {
 
   const fetchItems = async () => {
     try {
-      const res = await axios.get(`https://to-do-list-ws11.onrender.com/get-items/${id}`, {
+      const res = await axiosInstance.get(`/get-items/${id}`, {
         withCredentials: true,
       });
       if (res.data.success) {
@@ -72,8 +73,8 @@ function ListItem() {
   const addItem = async () => {
     if (!newItem.trim()) return;
     try {
-      const res = await axios.post(
-        `https://to-do-list-ws11.onrender.com/lists/${id}/items`,
+      const res = await axiosInstance.post(
+        `/lists/${id}/items`,
         { description: newItem },
         { withCredentials: true }
       );
@@ -88,8 +89,8 @@ function ListItem() {
 
   const deleteItem = async (itemId) => {
     try {
-      const res = await axios.delete(
-        `https://to-do-list-ws11.onrender.com/lists/${id}/items/${itemId}`,
+      const res = await axiosInstance.delete(
+        `/lists/${id}/items/${itemId}`,
         { withCredentials: true }
       );
       if (res.data.success) fetchItems();
@@ -101,8 +102,8 @@ function ListItem() {
   const toggleStatus = async (item) => {
     try {
       const newStatus = item.status ? "pending" : "completed";
-      const res = await axios.put(
-        `https://to-do-list-ws11.onrender.com/lists/${id}/items/${item.id}`,
+      const res = await axiosInstance.put(
+        `/lists/${id}/items/${item.id}`,
         { description: item.description, status: newStatus },
         { withCredentials: true }
       );
@@ -115,8 +116,8 @@ function ListItem() {
   const updateItem = async (item) => {
     if (!editedItemText.trim()) return;
     try {
-      const res = await axios.put(
-        `https://to-do-list-ws11.onrender.com/lists/${id}/items/${item.id}`,
+      const res = await axiosInstance.put(
+        `/lists/${id}/items/${item.id}`,
         {
           description: editedItemText,
           status: item.status ? "completed" : "pending",

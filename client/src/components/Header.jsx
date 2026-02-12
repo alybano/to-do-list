@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { axiosInstance } from "./api";
 
 function Header() {
   const [user, setUser] = useState(null);
@@ -12,7 +13,7 @@ function Header() {
 
   const checkSession = async () => {
     try {
-      const res = await axios.get("https://to-do-list-ws11.onrender.com/get-session", {
+      const res = await axiosInstance.get("/get-session", {
         withCredentials: true,
       });
 
@@ -31,8 +32,8 @@ function Header() {
 
   const handleLogout = async () => {
     try {
-      await axios.post(
-        "https://to-do-list-ws11.onrender.com/logout",
+      await axiosInstance.post(
+        "/logout",
         {},
         { withCredentials: true }
       );

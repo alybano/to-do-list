@@ -1,6 +1,6 @@
 import { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { axiosInstance } from "./api.js";
 
 function App() {
   const [username, setUsername] = useState("");
@@ -8,24 +8,20 @@ function App() {
 
   const navigate = useNavigate();
 
-  const handleLogin = async () => {
-    try {
-      const res = await axios.post(
-        "https://to-do-list-ws11.onrender.com/login",
-        { username, password },
-        { withCredentials: true }
-      );
+const handleLogin = async () => {
+  try {
+    const res = await axiosInstance.post("/login", { username, password });
 
-      if (res.status === 200 && res.data.success) {
-        navigate("/home");
-      } else {
-        alert("Login failed");
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Invalid username or password");
+    if (res.status === 200 && res.data.success) {
+      navigate("/home");
+    } else {
+      alert("Login failed");
     }
-  };
+  } catch (err) {
+    console.error(err);
+    alert("Invalid username or password");
+  }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-white/80 backdrop-blur-lg">
