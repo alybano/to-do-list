@@ -24,13 +24,24 @@ app.use(
 // Middleware
 app.use(express.json());
 
+// ✅ CORS Middleware (MUST BE HERE)
+const allowedOrigins = [
+  "https://to-do-list-one-black-96.vercel.app",
+  "http://localhost:5173",
+];
+
 app.use(
   cors({
-    origin: "https://to-do-list-one-black-96.vercel.app",
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+      callback(new Error("Not allowed by CORS"));
+    },
     credentials: true,
   })
 );
 
+// Session middleware
 app.use(
   session({
     name: "user-session",
@@ -38,7 +49,7 @@ app.use(
       "eeb1776a97822c4a1abbb47a677f6b415100a2f0ef3effb2d4c4523dec57d468",
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: process.env.NODE_ENV === "production" }
+    cookie: { secure: process.env.NODE_ENV === "production" },
   })
 );
 

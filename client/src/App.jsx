@@ -10,16 +10,20 @@ function App() {
 
 const handleLogin = async () => {
   try {
-    const res = await axiosInstance.post("/login", { username, password, withCredentials: true, });
+    const res = await axiosInstance.post(
+      "/login",
+      { username, password }, // ✅ removed withCredentials here
+      { withCredentials: true } // ✅ correct place
+    );
 
     if (res.status === 200 && res.data.success) {
       navigate("/home");
     } else {
-      alert("Login failed");
+      alert(res.data.message || "Login failed");
     }
   } catch (err) {
-    console.error(err);
-    alert("Invalid username or password");
+    console.error("Login Error:", err);
+    alert(err.response?.data?.message || "Invalid username or password");
   }
 };
 

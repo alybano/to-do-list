@@ -13,52 +13,50 @@ function Register() {
   const navigate = useNavigate();
 
   // LOGIN HANDLER
-  const handleLogin = async () => {
-    try {
-      const res = await axiosInstance.post("/login", {
-        username,
-        password,
-        withCredentials: true,
-      });
+const handleLogin = async () => {
+  try {
+    const res = await axiosInstance.post(
+      "/login",
+      { username, password }, // ✅ fixed
+      { withCredentials: true }
+    );
 
-      if (res.status === 200 && res.data.success) {
-        navigate("/home"); // go to home after login
-      } else {
-        alert(res.data.message || "Login failed");
-      }
-    } catch (err) {
-      console.error(err);
-      alert(err.response?.data?.message || "Login failed");
+    if (res.status === 200 && res.data.success) {
+      navigate("/home");
+    } else {
+      alert(res.data.message || "Login failed");
     }
-  };
+  } catch (err) {
+    console.error("Login Error:", err);
+    alert(err.response?.data?.message || "Login failed");
+  }
+};
 
   // REGISTER HANDLER
   const handleRegister = async () => {
-    if (password !== confirm) {
-      alert("Passwords do not match");
-      return;
-    }
+  if (password !== confirm) {
+    alert("Passwords do not match");
+    return;
+  }
 
-    try {
-      const res = await axiosInstance.post("/register", {
-        name,
-        username,
-        password,
-        confirm,
-        withCredentials: true,
-      });
+  try {
+    const res = await axiosInstance.post(
+      "/register",
+      { name, username, password, confirm }, // ✅ removed withCredentials
+      { withCredentials: true }
+    );
 
-      if (res.status === 200 && res.data.success) {
-        alert("Registered successfully! Please login.");
-        setIsLogin(true); // switch to login after successful registration
-      } else {
-        alert("Registration failed");
-      }
-    } catch (err) {
-      console.error(err);
-      alert(err.response?.data?.message || "Registration failed");
+    if (res.status === 200 && res.data.success) {
+      alert("Registered successfully! Please login.");
+      setIsLogin(true);
+    } else {
+      alert(res.data.message || "Registration failed");
     }
-  };
+  } catch (err) {
+    console.error("Register Error:", err);
+    alert(err.response?.data?.message || "Registration failed");
+  }
+};
 
   return (
     <div
