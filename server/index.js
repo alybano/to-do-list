@@ -41,6 +41,9 @@ app.use(
   })
 );
 
+// ✅ ADD THIS LINE
+app.options("*", cors());
+
 // Session middleware
 app.use(
   session({
