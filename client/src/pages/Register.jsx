@@ -73,41 +73,55 @@ const handleLogin = async () => {
         </h1>
 
         {/* Form Fields */}
-        <div className="flex flex-col gap-4">
-          {!isLogin && (
-            <input
-              type="text"
-              placeholder="Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-400"
-            />
-          )}
+<div className="flex flex-col gap-4">
+  {!isLogin && (
+    <input
+      type="text"
+      id="name"
+      name="name"
+      autoComplete="name"
+      placeholder="Name"
+      value={name}
+      onChange={(e) => setName(e.target.value)}
+      className="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-400"
+    />
+  )}
 
-          <input
-            type="text"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-400"
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-400"
-          />
-          {!isLogin && (
-            <input
-              type="password"
-              placeholder="Confirm Password"
-              value={confirm}
-              onChange={(e) => setConfirm(e.target.value)}
-              className="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-400"
-            />
-          )}
-        </div>
+  <input
+    type="text"
+    id="username"
+    name="username"
+    autoComplete="username"
+    placeholder="Username"
+    value={username}
+    onChange={(e) => setUsername(e.target.value)}
+    className="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-400"
+  />
+
+  <input
+    type="password"
+    id="password"
+    name="password"
+    autoComplete={isLogin ? "current-password" : "new-password"}
+    placeholder="Password"
+    value={password}
+    onChange={(e) => setPassword(e.target.value)}
+    className="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-400"
+  />
+
+  {!isLogin && (
+    <input
+      type="password"
+      id="confirm"
+      name="confirm"
+      autoComplete="new-password"
+      placeholder="Confirm Password"
+      value={confirm}
+      onChange={(e) => setConfirm(e.target.value)}
+      className="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-400"
+    />
+  )}
+</div>
 
         {/* Action Button */}
         <button
