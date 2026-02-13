@@ -1,7 +1,8 @@
 import { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { axiosInstance } from "../components/api";
+
+
 
 function Register() {
   const [isLogin, setIsLogin] = useState(true); // toggle between login/register
