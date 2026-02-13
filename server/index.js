@@ -1,5 +1,7 @@
 import express from "express";
 import session from "express-session";
+import connectRedis from "connect-redis";
+import Redis from "redis";
 import helmet from "helmet";
 import cors from "cors";
 
@@ -9,7 +11,9 @@ import { hashPassword, comparePassword } from "./components/hash.js";
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Security Middleware
+/* =======================
+   SECURITY MIDDLEWARE
+======================= */
 app.use(
   helmet({
     contentSecurityPolicy: {
@@ -24,12 +28,15 @@ app.use(
 // Middleware
 app.use(express.json());
 
-// ✅ CORS Middleware (MUST BE HERE)
+/* =======================
+   CORS MIDDLEWARE
+======================= */
 const allowedOrigins = [
   "https://to-do-list-one-black-96.vercel.app",
   "http://localhost:5173",
 ];
 
+// Dynamic CORS check (kept intact)
 app.use(
   cors({
     origin: function (origin, callback) {
@@ -41,32 +48,52 @@ app.use(
   })
 );
 
-// ✅ ADD THIS LINE
-app.use(cors());
+// Also allow static origins (as before)
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
-// Session middleware
+/* =======================
+   SESSION MIDDLEWARE (Redis)
+======================= */
+const RedisStore = connectRedis(session);
+const redisClient = Redis.createClient({ url: process.env.REDIS_URL });
+redisClient.connect().catch(console.error);
+
 app.use(
   session({
+    store: new RedisStore({ client: redisClient }),
     name: "user-session",
     secret:
       "eeb1776a97822c4a1abbb47a677f6b415100a2f0ef3effb2d4c4523dec57d468",
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: process.env.NODE_ENV === "production" },
+    cookie: {
+      secure: process.env.NODE_ENV === "production", // HTTPS only in production
+      sameSite: "lax",
+    },
   })
 );
 
+/* =======================
+   ROUTES
+======================= */
 app.get("/", (req, res) => {
   res.send("Welcome to the To-Do List!");
 });
 
-// Favicon route fix
+// Favicon fix
 app.get("/favicon.ico", (req, res) => res.status(204).end());
 
 /* =======================
    LISTS ROUTES
 ======================= */
-
+// ... all your list routes remain unchanged ...
 // Get all lists
 app.get("/get-list", async (req, res) => {
   try {
@@ -77,7 +104,7 @@ app.get("/get-list", async (req, res) => {
   }
 });
 
-// ✅ NEW: Get single list by ID (USED FOR LIST TITLE)
+// Get single list by ID
 app.get("/get-list/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -96,6 +123,7 @@ app.get("/get-list/:id", async (req, res) => {
   }
 });
 
+// Add list
 app.post("/add-list", async (req, res) => {
   const { listTitle } = req.body;
   try {
@@ -109,7 +137,7 @@ app.post("/add-list", async (req, res) => {
   }
 });
 
-// UPDATE list title
+// Update list
 app.put("/update-list/:listId", async (req, res) => {
   const { listId } = req.params;
   const { title } = req.body;
@@ -134,6 +162,7 @@ app.put("/update-list/:listId", async (req, res) => {
   }
 });
 
+// Delete list
 app.delete("/delete-list/:listId", async (req, res) => {
   const { listId } = req.params;
   try {
@@ -149,7 +178,6 @@ app.delete("/delete-list/:listId", async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 });
-
 /* =======================
    ITEMS ROUTES
 ======================= */
