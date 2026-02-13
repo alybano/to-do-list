@@ -42,7 +42,7 @@ app.use(
 );
 
 // ✅ ADD THIS LINE
-app.options("*", cors());
+app.options("/*", cors());
 
 // Session middleware
 app.use(
