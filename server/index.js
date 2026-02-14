@@ -154,6 +154,68 @@ app.delete("/delete-list/:listId", async (req, res) => {
   }
 });
 
+// Get items for a list
+app.get("/get-items/:listId", async (req, res) => {
+  try {
+    const { listId } = req.params;
+    const result = await pool.query(
+      "SELECT id, description, status FROM items WHERE list_id = $1",
+      [listId]
+    );
+    res.json({ success: true, items: result.rows });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// Add item to a list
+app.post("/lists/:listId/items", async (req, res) => {
+  const { listId } = req.params;
+  const { description } = req.body;
+  try {
+    const result = await pool.query(
+      "INSERT INTO items (list_id, description, status) VALUES ($1, $2, $3) RETURNING *",
+      [listId, description, "pending"]
+    );
+    res.json({ success: true, item: result.rows[0] });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// Update item
+app.put("/lists/:listId/items/:itemId", async (req, res) => {
+  const { listId, itemId } = req.params;
+  const { description, status } = req.body;
+  try {
+    const result = await pool.query(
+      "UPDATE items SET description = $1, status = $2 WHERE id = $3 AND list_id = $4 RETURNING *",
+      [description, status, itemId, listId]
+    );
+    if (result.rowCount === 0)
+      return res.status(404).json({ success: false, message: "Item not found" });
+    res.json({ success: true, item: result.rows[0] });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// Delete item
+app.delete("/lists/:listId/items/:itemId", async (req, res) => {
+  const { listId, itemId } = req.params;
+  try {
+    const result = await pool.query(
+      "DELETE FROM items WHERE id = $1 AND list_id = $2 RETURNING id",
+      [itemId, listId]
+    );
+    if (result.rowCount === 0)
+      return res.status(404).json({ success: false, message: "Item not found" });
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
 /* =======================
    AUTH ROUTES
 ======================= */
