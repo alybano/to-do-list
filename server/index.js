@@ -23,7 +23,6 @@ app.use(
   })
 );
 
-// Middleware
 app.use(express.json());
 
 /* =======================
@@ -34,7 +33,6 @@ const allowedOrigins = [
   "http://localhost:5173",
 ];
 
-// Dynamic CORS check (kept intact)
 app.use(
   cors({
     origin: function (origin, callback) {
@@ -46,19 +44,11 @@ app.use(
   })
 );
 
-// Also allow static origins (as before)
-app.use(
-  cors({
-    origin: allowedOrigins,
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
-
+/* =======================
+   SESSION (NO REDIS)
+======================= */
 app.use(
   session({
-    store: new RedisStore({ client: redisClient }), // ✅ works now
     name: "user-session",
     secret:
       "eeb1776a97822c4a1abbb47a677f6b415100a2f0ef3effb2d4c4523dec57d468",
@@ -74,18 +64,17 @@ app.use(
 /* =======================
    ROUTES
 ======================= */
+
 app.get("/", (req, res) => {
   res.send("Welcome to the To-Do List!");
 });
 
-// Favicon fix
 app.get("/favicon.ico", (req, res) => res.status(204).end());
 
 /* =======================
-   LISTS ROUTES
+   LIST ROUTES
 ======================= */
-// ... all your list routes remain unchanged ...
-// Get all lists
+
 app.get("/get-list", async (req, res) => {
   try {
     const list = await pool.query("SELECT * FROM list");
@@ -95,7 +84,6 @@ app.get("/get-list", async (req, res) => {
   }
 });
 
-// Get single list by ID
 app.get("/get-list/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -104,9 +92,8 @@ app.get("/get-list/:id", async (req, res) => {
       [id]
     );
 
-    if (result.rows.length === 0) {
+    if (result.rows.length === 0)
       return res.status(404).json({ success: false });
-    }
 
     res.json({ success: true, list: result.rows[0] });
   } catch (error) {
@@ -114,7 +101,6 @@ app.get("/get-list/:id", async (req, res) => {
   }
 });
 
-// Add list
 app.post("/add-list", async (req, res) => {
   const { listTitle } = req.body;
   try {
@@ -128,14 +114,12 @@ app.post("/add-list", async (req, res) => {
   }
 });
 
-// Update list
 app.put("/update-list/:listId", async (req, res) => {
   const { listId } = req.params;
   const { title } = req.body;
 
-  if (!title || !title.trim()) {
+  if (!title || !title.trim())
     return res.status(400).json({ success: false, message: "Title required" });
-  }
 
   try {
     const result = await pool.query(
@@ -143,9 +127,8 @@ app.put("/update-list/:listId", async (req, res) => {
       [title, listId]
     );
 
-    if (result.rowCount === 0) {
+    if (result.rowCount === 0)
       return res.status(404).json({ success: false });
-    }
 
     res.json({ success: true, list: result.rows[0] });
   } catch (error) {
@@ -153,7 +136,6 @@ app.put("/update-list/:listId", async (req, res) => {
   }
 });
 
-// Delete list
 app.delete("/delete-list/:listId", async (req, res) => {
   const { listId } = req.params;
   try {
@@ -162,78 +144,10 @@ app.delete("/delete-list/:listId", async (req, res) => {
       "DELETE FROM list WHERE id = $1 RETURNING id",
       [listId]
     );
+
     if (result.rowCount === 0)
       return res.status(404).json({ success: false });
-    res.json({ success: true });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-});
-/* =======================
-   ITEMS ROUTES
-======================= */
 
-app.get("/get-items", async (req, res) => {
-  try {
-    const items = await pool.query("SELECT * FROM items");
-    res.status(200).json({ success: true, items: items.rows });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-});
-
-app.get("/get-items/:listId", async (req, res) => {
-  const { listId } = req.params;
-  try {
-    const items = await pool.query(
-      "SELECT * FROM items WHERE list_id = $1",
-      [listId]
-    );
-    res.status(200).json({ success: true, items: items.rows });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-});
-
-app.post("/lists/:listId/items", async (req, res) => {
-  const { listId } = req.params;
-  const { description } = req.body;
-  try {
-    const result = await pool.query(
-      "INSERT INTO items (list_id, description, status) VALUES ($1, $2, $3) RETURNING *",
-      [listId, description, "pending"]
-    );
-    res.json({ success: true, item: result.rows[0] });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-});
-
-app.put("/lists/:listId/items/:itemId", async (req, res) => {
-  const { listId, itemId } = req.params;
-  const { description, status } = req.body;
-  try {
-    const result = await pool.query(
-      "UPDATE items SET description = $1, status = $2 WHERE id = $3 AND list_id = $4 RETURNING *",
-      [description, status, itemId, listId]
-    );
-    if (result.rowCount === 0)
-      return res.status(404).json({ success: false });
-    res.json({ success: true, item: result.rows[0] });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-});
-
-app.delete("/lists/:listId/items/:itemId", async (req, res) => {
-  const { listId, itemId } = req.params;
-  try {
-    const result = await pool.query(
-      "DELETE FROM items WHERE id = $1 AND list_id = $2 RETURNING id",
-      [itemId, listId]
-    );
-    if (result.rowCount === 0)
-      return res.status(404).json({ success: false });
     res.json({ success: true });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
@@ -243,6 +157,7 @@ app.delete("/lists/:listId/items/:itemId", async (req, res) => {
 /* =======================
    AUTH ROUTES
 ======================= */
+
 app.post("/register", async (req, res) => {
   const { name, username, password, confirm } = req.body;
 
@@ -261,6 +176,7 @@ app.post("/register", async (req, res) => {
       "SELECT 1 FROM user_accounts WHERE username = $1",
       [username]
     );
+
     if (exists.rows.length > 0)
       return res
         .status(400)
@@ -284,6 +200,7 @@ app.post("/register", async (req, res) => {
 
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
+
   try {
     if (!username || !password)
       return res
@@ -294,6 +211,7 @@ app.post("/login", async (req, res) => {
       "SELECT * FROM user_accounts WHERE username = $1",
       [username]
     );
+
     if (result.rows.length === 0)
       return res
         .status(401)
@@ -301,6 +219,7 @@ app.post("/login", async (req, res) => {
 
     const user = result.rows[0];
     const match = await comparePassword(password, user.password);
+
     if (!match)
       return res
         .status(401)
@@ -336,7 +255,10 @@ app.post("/logout", (req, res) => {
   });
 });
 
-// Start server
+/* =======================
+   START SERVER
+======================= */
+
 app.listen(PORT, () => {
   console.log(`✅ Server running on port ${PORT}`);
 });
