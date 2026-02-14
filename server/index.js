@@ -47,6 +47,8 @@ app.use(
 /* =======================
    SESSION (NO REDIS)
 ======================= */
+app.set("trust proxy", 1);
+
 app.use(
   session({
     name: "user-session",
@@ -55,12 +57,12 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      secure: true,          // REQUIRED for sameSite none
+      sameSite: "none",      // REQUIRED for cross-site
+      httpOnly: true,
     },
   })
 );
-
 /* =======================
    ROUTES
 ======================= */
