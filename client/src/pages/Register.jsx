@@ -13,6 +13,10 @@ function Register() {
 
   // LOGIN HANDLER
   const handleLogin = async () => {
+  if (!username.trim() || !password.trim()) {
+    alert("Please enter both username and password");
+    return;
+  }  
     try {
       const res = await axiosInstance.post(
         "/login",
