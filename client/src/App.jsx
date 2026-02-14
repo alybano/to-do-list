@@ -6,26 +6,39 @@ function App() {
 
   return (
     <div
-      className="min-h-screen flex flex-col items-center justify-center bg-white/80 backdrop-blur-lg"
+      className="min-h-screen flex items-center justify-center"
       style={{
         background: "radial-gradient(circle at top left, #f8fafc, #dbeafe, #e0e7ff)",
       }}
     >
-      <div className="w-full max-w-md bg-white/90 rounded-2xl shadow-xl p-8 border border-white/40 text-center">
-        <h1 className="text-3xl font-semibold text-gray-800 mb-6">
-          Welcome to the To-Do List App
-        </h1>
+      <div className="w-full max-w-4xl bg-white rounded-2xl shadow-2xl flex flex-col md:flex-row overflow-hidden">
+        {/* Left content */}
+        <div className="flex-1 p-10 flex flex-col justify-center">
+          <h1 className="text-4xl md:text-5xl font-bold text-blue-700 mb-6">
+            Manage Your To-Do Lists
+          </h1>
+          <p className="text-gray-700 mb-8">
+            Organize tasks, track progress, and never forget what’s important. 
+            Sign up or log in to start managing your day efficiently.
+          </p>
+          <button
+            onClick={() => navigate("/register")}
+            className="px-8 py-3 bg-blue-700 text-white font-semibold rounded-xl hover:bg-blue-800 active:scale-95 transition w-max"
+          >
+            Get Started
+          </button>
+        </div>
 
-        <p className="text-gray-700 mb-8">
-          Manage your tasks efficiently. Sign up or log in to continue.
-        </p>
-
-        <button
-          onClick={() => navigate("/register")}
-          className="w-full py-3 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700 active:scale-95 transition"
+        {/* Right illustration (placeholder box) */}
+        <div
+          className="flex-1 bg-gradient-to-br from-blue-400 via-purple-500 to-pink-500 flex items-center justify-center"
+          style={{ minHeight: "300px" }}
         >
-          Go to Register / Login
-        </button>
+          {/* You can replace this with an actual SVG or image */}
+          <div className="w-64 h-64 bg-white/30 rounded-xl flex items-center justify-center text-white font-bold text-lg">
+            Illustration
+          </div>
+        </div>
       </div>
     </div>
   );
