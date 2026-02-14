@@ -1,7 +1,5 @@
 import express from "express";
 import session from "express-session";
-import { RedisStore } from "connect-redis"; // ✅ named import
-import Redis from "redis";
 import helmet from "helmet";
 import cors from "cors";
 
@@ -57,12 +55,6 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-
-/* =======================
-   SESSION MIDDLEWARE (Redis)
-======================= */
-const redisClient = Redis.createClient({ url: process.env.REDIS_URL });
-redisClient.connect().catch(console.error);
 
 app.use(
   session({
