@@ -198,6 +198,14 @@ function Home() {
         ) : (
           <p className="text-gray-700">No lists found.</p>
         )}
+
+        <button
+  onClick={() => navigate("/")}
+  className="fixed bottom-6 right-6 bg-red-600 text-white p-4 rounded-full shadow-lg hover:bg-red-700 transition"
+  title="Exit"
+>
+  Exit
+</button>
       </div>
     </div>
   );
